@@ -118,7 +118,7 @@ function balanceDisks() {
   do
     BIGGEST_DISK="$(getUsedDisk most)"
     SMALLEST_DISK="$(getUsedDisk least)"
-    log "${BALANCE_THRESHOLD}% threshold between ${BIGGEST_DISK} and ${SMALLEST_DISK} exceed, balancing data."
+    log "${BALANCE_THRESHOLD}% threshold between ${BIGGEST_DISK} and ${SMALLEST_DISK} exceeded, balancing data."
     moveSubdir "$BIGGEST_DISK" "$SMALLEST_DISK"
     BIGGEST_DISK_SIZE="$(getUsedDisk most size)"
     SMALLEST_DISK_SIZE="$(getUsedDisk least size)"
