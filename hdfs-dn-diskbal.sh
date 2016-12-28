@@ -61,9 +61,9 @@ function getBiggestSubdir() {
 
   BIGGEST_DISK=$(getUsedDisk most)
   cd "${BIGGEST_DISK}"
-  # we are only interested in the leaves of the directory tree, hence the -S 
-  # switch, because data files are only in the leaves
-  du -d2 -S current/BP-*/current/finalized/|sort -n -k1 |tail -n2|head -n1|awk '{print $2}'
+  # find the biggest 1st level "subdirNN"
+  find current/BP-*/current/finalized/  -mindepth 1 -maxdepth 1 -type d -print0 \
+  | xargs -0 -n 8 du -d0|sort -k1 -n|tail -n1|awk '{print $2}'
 }
 
 function checkDatanodeRunning() {
