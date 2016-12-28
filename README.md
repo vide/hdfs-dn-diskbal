@@ -1,4 +1,4 @@
-** HDFS DataNode local disks balance
+## HDFS DataNode local disks balance
 
 `hdfs-dn-diskbal.sh` is a small tool to internally balance datanode's disks.
 It can be useful when you have for instance replaced one or more disks in a 
@@ -13,16 +13,20 @@ This is what I'm trying to mimic in a poor-man-way.
 and even if I tried to make as agnostic as possible, it can burn your servers to ashes,
 grind your disks, make disturbing noises etc. You have been warned.
 
-*** Usage
+### Usage
 
-# Stop the datanode (and possibly any other hadoop service running on the node, 
+**NOTE**: you should run this script as the `hdfs` user, or whatever unix user is the
+owner of your HDFS data files.
+
+* Stop the datanode (and possibly any other hadoop service running on the node, 
 especially if they have shortcircuit enabled
-# Run `hdfs-dn-diskbal.sh` (possibly behind a `screen` session) and wait. It will output
+* Run `hdfs-dn-diskbal.sh` (possibly behind a `screen` session) and wait. It will output
 what's doing on stdout
 
-***
-# by default this script will look for HDFS config in `/etc/hadoop/conf/hdfs-site.xml`. You can 
+### Parameters
+
+* by default this script will look for HDFS config in `/etc/hadoop/conf/hdfs-site.xml`. You can 
 specify where it should look for the XML configuration with the `--hdfs-config` switch
-# Balancing will stop when the difference between the most and least used disks is below 5%
+* Balancing will stop when the difference between the most and least used disks is below 5%
 You can tune this behaviour with the `--threshold` switch
 
