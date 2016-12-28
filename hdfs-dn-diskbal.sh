@@ -99,8 +99,8 @@ function moveSubdir() {
 
   DEST_SUBDIR=$(dirname ${SUBDIR})
   log "Moving ${SOURCE_DISK}/${SUBDIR} to ${DEST_DISK}/${DEST_SUBDIR}"
-  echo mkdir -p "${DEST_DISK}/${SUBDIR}" # just in case dest dir does not exist
-  echo rsync -a --remove-source-files "${SOURCE_DISK}/${SUBDIR}" "${DEST_DISK}/${DEST_SUBDIR}"
+  mkdir -p "${DEST_DISK}/${SUBDIR}" # just in case dest dir does not exist
+  rsync -a --remove-source-files "${SOURCE_DISK}/${SUBDIR}" "${DEST_DISK}/${DEST_SUBDIR}"
 
 }
 
