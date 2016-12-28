@@ -134,8 +134,9 @@ BALANCE_THRESHOLD=5 # in %
 while [ $# -gt 0 ]  
 do
     case "$1" in
-        --hdfs-config|-c) HDFS_CONF="$2";         shift 2;;        
-        --threshold|-t)   BALANCE_THRESHOLD="$2"; shift 2;;    
+        --hdfs-config|-c) HDFS_CONF="$2";         shift 2;;
+        --threshold|-t)   BALANCE_THRESHOLD="$2"; shift 2;;
+        --force|-f)       FORCE_RUN="1";          shift 1;;
         *)                printHelp "Wrong parameter" ;;
     esac        
 done

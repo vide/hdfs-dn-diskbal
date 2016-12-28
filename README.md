@@ -30,3 +30,7 @@ specify where it should look for the XML configuration with the `--hdfs-config` 
 * Balancing will stop when the difference between the most and least used disks is below 5%
 You can tune this behaviour with the `--threshold` switch
 
+## License
+
+This software is released under the GNU GPLv2 license
+
