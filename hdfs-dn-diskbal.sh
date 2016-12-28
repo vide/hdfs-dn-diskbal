@@ -19,6 +19,7 @@ Usage: $(basename $0)
                                    Default: /etc/hadoop/conf/hdfs-site.xml
         --threshold|-t PERCENTAGE  Tolerate up to this % of difference between 2 disks.
                                    Integer value. Default: 5                                   
+        --force|-f                 Force running when executed as root
 EOF
     
 exit 2
@@ -30,11 +31,14 @@ exit 2
 # mentioned in datanode's HDFS config file
 function parseDisks() {
 
+  [ -f "${HDFS_CONF}" ] || { log "HDFS config file ${HDFS_CONF} does not exist. Exiting."; exit 2; }
   log "Loaded datanode config file ${HDFS_CONF}"
   IFS="," read -r -a HDFS_DISKS < <(grep "<name>dfs.datanode.data.dir</name>"\
                                     "${HDFS_CONF}"\
                                     -A 1|tail -n1|sed -r "s_^[ ]*<value>(.*)</value>_\1_"|tr -d ' ')
 
+  [ ${#HDFS_DISKS[@]} -lt 2 ] && { log "We need at least 2 disks to balance. Found only ${#HDFS_DISKS[@]} in config file.";
+                                   exit 2; }
   log "Data disks to be balanced: ${HDFS_DISKS[*]}"
 }
 
@@ -73,13 +77,17 @@ function checkDatanodeRunning() {
       exit 2; }
 }
 
+function checkRunningUser() {
+
+  id|grep -q "uid=0" && { log "Running as root user, exiting. Use --force to override"; exit 2; }
+}
+
 # moveSubdir FROM_DISK TO_DISK
 function moveSubdir() {
   
   local SOURCE_DISK
   local DEST_DISK
 
-  checkDatanodeRunning
   SOURCE_DISK=$1
   DEST_DISK=$2
 
@@ -131,6 +139,7 @@ function balanceDisks() {
 # main starts here
 HDFS_CONF="/etc/hadoop/conf/hdfs-site.xml"
 BALANCE_THRESHOLD=5 # in %
+FORCE_RUN=0
 while [ $# -gt 0 ]  
 do
     case "$1" in
@@ -141,6 +150,8 @@ do
     esac        
 done
 
+checkDatanodeRunning
+[ ${FORCE_RUN} -eq 0 ] && checkRunningUser
 
 log "Starting DataNode local disks balancing"
 parseDisks
